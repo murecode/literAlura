@@ -26,81 +26,56 @@ public class Principal {
     this.authorRepo = authorRepository;
   }
 
-  public void showMenu() {
+  public void showMenu() throws JsonProcessingException {
 
     var opcion = -1;
     while (opcion != 0) {
 
       String menu_options = """
           ==========LiterAlura============
-          1. Buscar libro por título
-          2. Listar todos los libros
-          3. Listar autores
-          4. Buscar autores vivos durante...
-          5. Buscar libro en Base de Datos
-          6. Listar autores vivos en el año...
+          1. Listar todos los libros
+          2. Buscar libro por título
+          3. Listar todos los autores
+          4. Buscar autores vivos en el año
+          5. Poblar bases de datos
+          6. 
           
           0. Salir
 
           ================================
           """;
       System.out.println(menu_options);
-      opcion = input.nextInt();
-      input.nextLine();
 
-      Scanner input = new Scanner(System.in);
+      opcion = input.nextInt();
 
       switch (opcion) {
+
         case 1:
-          String title = input.next();
-          try {
-            System.out.println("Buscando...");
-            services.findBookByTitle(title);
-          } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-          }
+          getAllBooks();
           break;
 
         case 2:
-          try {
-            System.out.println("Recopilando libros...");
-            services.getAllBooks();
-            saveAllBooks();
-          } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-          }
+          findBookInDataBase();
           break;
 
         case 3:
-          try {
-            System.out.println("Recopilando autores...");
-            services.getAllAuthors();
-            saveAllAuthors();
-          } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-          }
+          getAllAuthors();
           break;
 
         case 4:
-          System.out.println("Desde el año:");
-          String from = input.next();
-          System.out.println("hasta el año:");
-          String to = input.next();
-          try {
-            services.getLivingAuthorsByDate(from, to);
-          } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-          }
-          break;
-        case 5:
-          findBookInDataBase();
-          break;
-        case 6:
           findLivingAuthorsByYear();
           break;
 
+        case 5:
+          saveAllBooks();
+          saveAllAuthors();
+          break;
+
+        case 6:
+          break;
+
         case 0:
-          System.out.println("Gracias por usar esta App");
+          System.out.println(">>> Gracias por usar esta App <<<");
           break;
 
 
@@ -110,7 +85,7 @@ public class Principal {
   }
 
   private void saveAllBooks() throws JsonProcessingException {
-    List<Book> books = services.getAllBooks();
+    Set<Book> books = services.getAllBooks();
     bookRepo.saveAll(books);
   }
 
@@ -119,34 +94,59 @@ public class Principal {
     authorRepo.saveAll(authors);
   }
 
+  private void getAllBooks(){
+    List<Book> books = bookRepo.findAll();
+
+    if (!books.isEmpty()) {
+      System.out.println(">>> Lista de autores: <<<");
+      books.forEach(System.out::println);
+    } else {
+      System.out.println(">>> Sin resultados <<<");
+    }
+  }
+
   private void findBookInDataBase() {
-    System.out.println("Ingresa el título del libro");
+    System.out.println(">>> Ingresa el título del libro <<<");
     String titulo = input.next();
     Optional<Book> libroBuscado = bookRepo.findByTituloContainsIgnoreCase(titulo);
 
     if (libroBuscado.isPresent()) {
-      System.out.println("Encontrado: ");
+      System.out.println(">>> Encontrado: <<<");
       System.out.println(libroBuscado.get());
     } else {
-      System.out.println("Libro no encontrado");
+      System.out.println(">>> Libro no encontrado <<<");
     }
 
     /*TODO:
-    * 1. Se esta teniendo problemas con la busqueda posiblemente los espacios en blnco de los titulos
+       1. Se esta teniendo problemas con la busqueda posiblemente los espacios en blnco de los titulos
     */
 
   }
 
-  private void findLivingAuthorsByYear() {
-    System.out.println("Ingresa el año:");
-    var anio = input.nextInt();
-    List<Author> autores = authorRepo.findByNacimiento(anio);
+  private void getAllAuthors(){
+    List<Author> authors = authorRepo.findAll();
 
-    if (!autores.isEmpty()) {
-      System.out.println("Listado de autores vivos en " + anio + "son");
-      autores.forEach(System.out::println);
+    if (!authors.isEmpty()) {
+      System.out.println(">>> Lista de autores: <<<");
+      authors.forEach(System.out::println);
     } else {
-      System.out.println("No se encontró ningun autor vivo en " + anio);
+      System.out.println(">>> Sin resultados <<<");
+    }
+  }
+
+  private void findLivingAuthorsByYear() {
+    System.out.println(">>> Ingrese año <<<");
+    int from = input.nextInt();
+    int to = from + 90;
+
+    List<Author> authors = authorRepo
+            .findByNacimientoGreaterThanEqualAndMuerteLessThanEqualOrMuerteIsNull(from, to );
+
+    if (!authors.isEmpty()) {
+      System.out.println(">>> Los autores vivos en el año " + from + " son: <<<");
+      authors.forEach(System.out::println);
+    } else {
+      System.out.println(">>> No se encontró ningun autor vivo en ese año <<<");
     }
 
 

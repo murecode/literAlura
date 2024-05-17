@@ -21,10 +21,10 @@ public class Author {
 
   public Author() {}
 
-  public Author(String nombre, int nacimiento, int muerte) {
-    this.nombre = nombre;
-    this.nacimiento = nacimiento;
-    this.muerte = muerte;
+  public Author(AuthorData authorData) {
+    this.nombre = authorData.nombre();
+    this.nacimiento = authorData.nacimiento();
+    this.muerte = authorData.muerte();
     this.años_vividos = muerte - nacimiento;
   }
 

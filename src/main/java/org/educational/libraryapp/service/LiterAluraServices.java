@@ -21,20 +21,16 @@ public class LiterAluraServices {
   DataConverterImpl converter = new DataConverterImpl();
   String URL_BASE = "https://gutendex.com/books/";
 
-  public List<Book> getAllBooks () throws JsonProcessingException {
+
+  public Set<Book> getAllBooks () throws JsonProcessingException {
 
     String jsonBooks = apiService.getData(URL_BASE);
     ApiResponse objBooks = converter.jsonToClass(jsonBooks, ApiResponse.class);
 
-    List<Book> books = objBooks.results().stream()
-            .map(b -> new Book(
-                    b.titulo(),
-                    b.autor().stream().map(AuthorData::nombre).findFirst().orElse(null),
-                    b.idiomas().stream().findFirst().orElse(null),
-                    b.descargas())
-            )
-            .sorted(Comparator.comparing(Book::getTitulo))
-            .toList();
+    Set<Book> books = objBooks.results().stream()
+            .map(b -> new Book(b))
+            .sorted(Comparator.comparing(Book::getId))
+            .collect(Collectors.toSet());
 
     books.forEach(System.out::println);
     return books;
@@ -50,12 +46,7 @@ public class LiterAluraServices {
 
     Optional<Book> bookData = objBook.results().stream()
             .filter(t -> t.titulo().toUpperCase().contains(book_title.toUpperCase()))
-            .map(b -> new Book(
-                    b.titulo(),
-                    b.autor().stream().map(AuthorData::nombre).findFirst().orElse(null),
-                    b.idiomas().stream().findFirst().orElse(null),
-                    b.descargas())
-            )
+            .map(b -> new Book(b))
             .findFirst();
 
     if (bookData.isPresent()) {
@@ -78,15 +69,15 @@ public class LiterAluraServices {
 
     Set<Author> autores = objAuthors.results().stream()
             .flatMap(a -> a.autor().stream())
-            .map(a -> new Author(a.nombre(), a.nacimiento(), a.muerte()))
+            .map(a -> new Author(a))
             .collect(Collectors.toSet());
 
-    autores.forEach(System.out::println);
+//    autores.forEach(System.out::println);
 
     return autores;
   }
 
-  public void getLivingAuthorsByDate(String from, String to) throws JsonProcessingException {
+/*  public void getLivingAuthorsByDate(String from, String to) throws JsonProcessingException {
     String yearStart = from;
     String yearEnd = to;
 
@@ -95,12 +86,12 @@ public class LiterAluraServices {
 
     List<Author> autores = objAuthors.results().stream()
             .flatMap(a -> a.autor().stream())
-            .map(a -> new Author(a.nombre(), a.nacimiento(), a.muerte()))
+            .map(a -> new Author(a))
             .sorted(Comparator.comparing(Author::getAños_vividos).reversed())
             .collect(Collectors.toList());
 
     autores.forEach(System.out::println);
 
-  }
+  }*/
 
 }

@@ -26,5 +26,5 @@ public class ChatGPTService {
 </dependency>*/
 
 /* TODO:
-      1. La idea con este componente es poder generar una breve sipnosis si el usauario lo desea
+      1. La idea con este componente es poder generar una breve sipnosis del libro si el usauario lo desea
 */

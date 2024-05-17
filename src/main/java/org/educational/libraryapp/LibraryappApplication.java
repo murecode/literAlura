@@ -27,8 +27,8 @@ public class LibraryappApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-	/*	Principal principal = new Principal(bookRepository, authorRepository );
-		principal.showMenu();*/
+		Principal principal = new Principal(bookRepository, authorRepository );
+		principal.showMenu();
 
 	}
 }

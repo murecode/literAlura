@@ -1,33 +1,46 @@
 package org.educational.libraryapp.model;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name="libros")
 public class Book {
   @Id()
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(unique = true)
   private long id;
   @Column(unique = true)
   private String titulo;
-  @Transient
+  @Column
   private String autor;
   @Column
-  private String idiomas;
+  @Enumerated(EnumType.STRING)
+  private Languages idiomas;
   @Column
   private int descargas;
+  @ManyToOne
+  private Author author;
 
-  public Book(String titulo, String autor, String idiomas, int descargas) {
-    this.titulo = titulo;
-    this.autor = autor;
-    this.idiomas = idiomas;
-    this.descargas = descargas;
+  public Book() {}
+
+  public Book(BookData bookData) {
+    this.id = bookData.id();
+    this.titulo = bookData.titulo();
+    this.autor = bookData.autor().stream()
+            .map(AuthorData::nombre)
+            .findFirst()
+            .orElse(null)
+            .replace(", ", " ");
+    this.idiomas = Languages.fromString(bookData.idiomas().get(0));
+    this.descargas = bookData.descargas();
   }
 
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
 
   public String getTitulo() {
     return titulo;
@@ -35,10 +48,6 @@ public class Book {
 
   public void setTitulo(String titulo) {
     this.titulo = titulo;
-  }
-
-  public long getId() {
-    return id;
   }
 
   public String getAutor() {
@@ -49,11 +58,11 @@ public class Book {
     this.autor = autor;
   }
 
-  public String getIdiomas() {
+  public Languages getIdiomas() {
     return idiomas;
   }
 
-  public void setIdiomas(String idiomas) {
+  public void setIdiomas(Languages idiomas) {
     this.idiomas = idiomas;
   }
 
@@ -67,7 +76,8 @@ public class Book {
 
   @Override
   public String toString() {
-    return  "TITULO: '" + titulo + '\'' + "\n" +
+    return  "ID: '" + id + '\'' + "\n" +
+            "TITULO: '" + titulo + '\'' + "\n" +
             "AUTOR: " + autor + "\n" +
             "IDIOMA: '" + idiomas + '\'' + "\n" +
             "DESCARGAS: " + descargas + "\n"
