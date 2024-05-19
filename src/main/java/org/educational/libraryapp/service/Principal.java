@@ -107,7 +107,7 @@ public class Principal {
 
   private void findBookInDataBase() {
     System.out.println(">>> Ingresa el título del libro <<<");
-    String titulo = input.next();
+    var titulo = input.next();
     Optional<Book> libroBuscado = bookRepo.findByTituloContainsIgnoreCase(titulo);
 
     if (libroBuscado.isPresent()) {
@@ -118,7 +118,8 @@ public class Principal {
     }
 
     /*TODO:
-       1. Se esta teniendo problemas con la busqueda posiblemente los espacios en blnco de los titulos
+       1. Se esta teniendo problema con la busqueda debido a que algunos titulios
+          se componen con palabras reservadas de SQL. ej: "IN"
     */
 
   }
@@ -140,7 +141,7 @@ public class Principal {
     int to = from + 90;
 
     List<Author> authors = authorRepo
-            .findByNacimientoGreaterThanEqualAndMuerteLessThanEqualOrMuerteIsNull(from, to );
+            .findAuthorsByYear(from, to);
 
     if (!authors.isEmpty()) {
       System.out.println(">>> Los autores vivos en el año " + from + " son: <<<");

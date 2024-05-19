@@ -72,9 +72,6 @@ class LibraryappApplicationTests {
 
 	}
 
-	/*TODO: 1. Crear una funcion que se encargue de mapear el objeto de la respuesta con la clase
-	*/
-
 
 	/*@Test
 	void testGetFavoriteDownloads() throws JsonProcessingException {
@@ -137,7 +134,7 @@ class LibraryappApplicationTests {
 		List<Author> autores_ls = objAuthors.results().stream()
 						.flatMap(a -> a.autor().stream())
 						.map(a -> new Author(a))
-						.sorted(Comparator.comparing(Author::getAños_vividos).reversed())
+						.sorted(Comparator.comparing(Author::getAnios_vividos).reversed())
 						.collect(Collectors.toList());
 
 		// LOGS

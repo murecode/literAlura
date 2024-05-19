@@ -17,7 +17,7 @@ public class Author {
   @Column
   private int muerte;
   @Column
-  private int años_vividos;
+  private int anios_vividos;
 
   public Author() {}
 
@@ -25,7 +25,7 @@ public class Author {
     this.nombre = authorData.nombre();
     this.nacimiento = authorData.nacimiento();
     this.muerte = authorData.muerte();
-    this.años_vividos = muerte - nacimiento;
+    this.anios_vividos = muerte - nacimiento;
   }
 
   public long getId() {
@@ -60,12 +60,12 @@ public class Author {
     this.muerte = muerte;
   }
 
-  public int getAños_vividos() {
-    return años_vividos;
+  public int getAnios_vividos() {
+    return anios_vividos;
   }
 
-  public void setAños_vividos(int años_vividos) {
-    this.años_vividos = años_vividos;
+  public void setAnios_vividos(int anios_vividos) {
+    this.anios_vividos = anios_vividos;
   }
 
   @Override
@@ -73,7 +73,7 @@ public class Author {
     return "NOMBRE: " + nombre + '\'' + "\n" +
             "NACIMIENTO: " + nacimiento + "\n" +
             "MUERTE: " + muerte + "\n" +
-            "VIVIDOS: " + años_vividos + "\n"
+            "VIVIDOS: " + anios_vividos + "\n"
             ;
   }
 }
