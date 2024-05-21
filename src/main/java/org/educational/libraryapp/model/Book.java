@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name="libros")
 public class Book {
   @Id()
-  @Column(unique = true)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   @Column(unique = true)
   private String titulo;
@@ -14,7 +14,7 @@ public class Book {
   private String autor;
   @Column
   @Enumerated(EnumType.STRING)
-  private Languages idiomas;
+  private Languages idioma;
   @Column
   private int descargas;
   @ManyToOne
@@ -23,14 +23,13 @@ public class Book {
   public Book() {}
 
   public Book(BookData bookData) {
-    this.id = bookData.id();
     this.titulo = bookData.titulo();
     this.autor = bookData.autor().stream()
             .map(AuthorData::nombre)
             .findFirst()
             .orElse(null)
             .replace(", ", " ");
-    this.idiomas = Languages.fromString(bookData.idiomas().get(0));
+    this.idioma = Languages.fromString(bookData.idiomas().get(0));
     this.descargas = bookData.descargas();
   }
 
@@ -59,11 +58,11 @@ public class Book {
   }
 
   public Languages getIdiomas() {
-    return idiomas;
+    return idioma;
   }
 
   public void setIdiomas(Languages idiomas) {
-    this.idiomas = idiomas;
+    this.idioma = idiomas;
   }
 
   public int getDescargas() {
@@ -79,7 +78,7 @@ public class Book {
     return  "ID: '" + id + '\'' + "\n" +
             "TITULO: '" + titulo + '\'' + "\n" +
             "AUTOR: " + autor + "\n" +
-            "IDIOMA: '" + idiomas + '\'' + "\n" +
+            "IDIOMA: '" + idioma + '\'' + "\n" +
             "DESCARGAS: " + descargas + "\n"
             ;
   }

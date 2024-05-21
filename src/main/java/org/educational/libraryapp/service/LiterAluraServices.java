@@ -36,6 +36,12 @@ public class LiterAluraServices {
     return books;
   }
 
+  public static String sanitizeString(String input) {
+    // Reemplazar todos los caracteres que no sean letras ni espacios con una cadena vacía
+    // También reemplazar comillas simples explícitamente
+    return input.replaceAll("[^\\p{L}\\s]", "").replace("'", "").trim();
+  }
+
 
   public Optional<Book> findBookByTitle(String title) throws JsonProcessingException {
 
@@ -45,7 +51,7 @@ public class LiterAluraServices {
     ApiResponse objBook = converter.jsonToClass(jsonBook, ApiResponse.class);
 
     Optional<Book> bookData = objBook.results().stream()
-            .filter(t -> t.titulo().toUpperCase().contains(book_title.toUpperCase()))
+            .filter(t -> t.titulo().toUpperCase().contains(book_title.toUpperCase().replace("'", "")))
             .map(b -> new Book(b))
             .findFirst();
 

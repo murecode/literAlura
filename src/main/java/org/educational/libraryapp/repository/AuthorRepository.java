@@ -13,9 +13,12 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
 //  List<Author> findByNacimientoGreaterThanEqualAndMuerteLessThanEqualOrMuerteIsNull(int startYear, int endYear);
 
-  @Query("select a from Author a where a.nacimiento >= :startYear and (a.muerte <= :endYear or a.muerte is null)")
+  @Query("select a from Author a")
+  List<Author> getAllAuthors();
+
+  @Query("select distinct a from Author a where a.nacimiento >= :startYear and (a.muerte <= :endYear or a.muerte is null)")
   List<Author> findAuthorsByYear(int startYear, int endYear);
 
 }
 
-/*TODO: 1. Retorna registros duplipados, intentar usar DISTINCT*/
+/*TODO: 1. Retorna registros duplicados, intentar usar DISTINCT*/

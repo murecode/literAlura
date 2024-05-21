@@ -3,7 +3,7 @@ package org.educational.libraryapp.model;
 public enum Languages {
   INGLES("en"),
   FRANCES("fr"),
-  ESPANOL("es"),
+  ESPAÑOL("es"),
   TAGALO("tl");
 
   private String bookLanguage;
