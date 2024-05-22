@@ -21,4 +21,3 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
 }
 
-/*TODO: 1. Retorna registros duplicados, intentar usar DISTINCT*/

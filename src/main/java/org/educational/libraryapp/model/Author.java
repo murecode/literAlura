@@ -18,6 +18,8 @@ public class Author {
   private int muerte;
   @Column
   private int anios_vividos;
+  @OneToMany(mappedBy = "author")
+  private List<Book> libros;
 
   public Author() {}
 
@@ -48,6 +50,14 @@ public class Author {
     return nacimiento;
   }
 
+  public List<Book> getLibros() {
+    return libros;
+  }
+
+  public void setLibros(List<Book> libros) {
+    this.libros = libros;
+  }
+
   public void setNacimiento(int nacimiento) {
     this.nacimiento = nacimiento;
   }
@@ -70,10 +80,9 @@ public class Author {
 
   @Override
   public String toString() {
-    return "NOMBRE: " + nombre + '\'' + "\n" +
-            "NACIMIENTO: " + nacimiento + "\n" +
-            "MUERTE: " + muerte + "\n" +
-            "VIVIDOS: " + anios_vividos + "\n"
-            ;
+    return  "NOMBRE: "     + nombre        + "\n" +
+            "NACIMIENTO: " + nacimiento    + "\n" +
+            "MUERTE: "     + muerte        + "\n" +
+            "VIVIDOS: "    + anios_vividos + "\n" ;
   }
 }

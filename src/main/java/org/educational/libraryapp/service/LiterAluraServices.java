@@ -3,10 +3,7 @@ package org.educational.libraryapp.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.educational.libraryapp.external_services.DataConverterImpl;
 import org.educational.libraryapp.external_services.GutendexAPI;
-import org.educational.libraryapp.model.Author;
-import org.educational.libraryapp.model.AuthorData;
-import org.educational.libraryapp.model.Book;
-import org.educational.libraryapp.model.ApiResponse;
+import org.educational.libraryapp.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -22,7 +19,7 @@ public class LiterAluraServices {
   String URL_BASE = "https://gutendex.com/books/";
 
 
-  public Set<Book> getAllBooks () throws JsonProcessingException {
+  public Set<Book> getAllBooks() throws JsonProcessingException {
 
     String jsonBooks = apiService.getData(URL_BASE);
     ApiResponse objBooks = converter.jsonToClass(jsonBooks, ApiResponse.class);
@@ -66,7 +63,21 @@ public class LiterAluraServices {
     return bookData;
   }
 
-  // mostDownloaded() {}
+  public void mostDownloaded() throws JsonProcessingException {
+
+    String jsonBooks = apiService.getData(URL_BASE);
+    ApiResponse objBook = converter.jsonToClass(jsonBooks, ApiResponse.class);
+
+    List<Book> books = objBook.results().stream()
+            .sorted(Comparator.comparing(BookData::descargas).reversed())
+            .map(b -> new Book(b))
+            .limit(10)
+            .collect(Collectors.toList());
+
+    System.out.println(">>> TOP 10 EN DESCARGAS <<<");
+    books.forEach(System.out::println);
+
+  }
 
   public Set<Author> getAllAuthors() throws JsonProcessingException {
 

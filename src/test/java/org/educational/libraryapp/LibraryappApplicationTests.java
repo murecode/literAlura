@@ -73,34 +73,21 @@ class LibraryappApplicationTests {
 	}
 
 
-	/*@Test
+	@Test
 	void testGetFavoriteDownloads() throws JsonProcessingException {
 
 		String jsonBooks = apiService.getData(URL_BASE);
-
 		ApiResponse objBook = converter.jsonToClass(jsonBooks, ApiResponse.class);
-		System.out.println( objBook );
 
 		List<Book> books = objBook.results().stream()
 						.sorted(Comparator.comparing(BookData::descargas).reversed())
-						.map(b -> new Book(
-										b.id(),
-										b.titulo(),
-										b.autor().stream()
-											.map(AuthorData::nombre)
-											.findFirst()
-											.orElse(null)
-											.toString().
-											replace(", ", " "),
-										b.idiomas().stream().findFirst().orElse(null),
-										b.descargas())
-						)
+						.map(b -> new Book(b))
 						.limit(10)
-						.toList();
+						.collect(Collectors.toList());
 
 		books.forEach(System.out::println);
 
-	}*/
+	}
 
 
 	@Test

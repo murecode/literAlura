@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>{
-  Book findByTituloContainsIgnoreCase(String titulo);
+  Optional<Book> findFirstByTituloContainsIgnoreCase(String titulo);
 
   @Query("select b from Book b where b.idioma = :idioma")
   List<Book> findByIdioma(@Param("idioma") Languages idioma);

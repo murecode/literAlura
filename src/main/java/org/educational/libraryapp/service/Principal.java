@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Principal {
   Scanner input = new Scanner(System.in);
@@ -33,15 +34,15 @@ public class Principal {
     while (opcion != 0) {
 
       String menu_options = """
-          ==========LiterAlura============
+          ========== LiterAlura ============
           1. Listar todos los libros
           2. Buscar libro por título
           3. Listar libros por idioma
-          --------------------------------
+          ----------------------------------
           4. Listar todos los autores
           5. Buscar autores vivos en el año
-          --------------------------------
-          6. Poblar bases de datos
+          ----------------------------------
+          6. Top 10 Libros más descargados
           
           0. Salir
           ================================
@@ -73,8 +74,13 @@ public class Principal {
           break;
 
         case 6:
-//          saveAllBooks();
-//          saveAllAuthors();
+          services.mostDownloaded();
+          break;
+
+        case 7:
+          break;
+
+        case 8:
           break;
 
         case 0:
@@ -82,7 +88,7 @@ public class Principal {
           break;
 
         default:
-          System.out.println("Opción no soportada");
+          System.out.println(">>> Opción no soportada <<<");
 
 
       }//end switch
@@ -115,21 +121,12 @@ public class Principal {
     Scanner input_str = new Scanner(System.in);
     System.out.println(">>> Ingresa el título del libro <<<");
     String titulo = input_str.next();
-    Book libroBuscado = bookRepo.findByTituloContainsIgnoreCase(titulo);
+    Optional<Book> libroBuscado = bookRepo.findFirstByTituloContainsIgnoreCase(titulo);
 
-    System.out.println(libroBuscado);
+    var x = libroBuscado.orElse(null);
 
-   /* if (libroBuscado.) {
-      System.out.println(">>> Encontrado: <<<");
-      System.out.println(libroBuscado.get());
-    } else {
-      System.out.println(">>> Libro no encontrado <<<");
-    }*/
+    System.out.println(x.toString());
 
-    /*TODO:
-       1. Se esta teniendo problema con la busqueda debido a que algunos titulios
-          se componen con palabras reservadas de SQL. ej: "IN"
-    */
   }
 
 
@@ -143,6 +140,8 @@ public class Principal {
       List<Book> libros = bookRepo.findByIdioma(Languages.valueOf(String.valueOf(language)));
 
       if (!libros.isEmpty()) {
+        var cantidad = libros.stream().collect(Collectors.counting());
+        System.out.println( ">>> Total libros en este idioma: " + cantidad + " <<<");
         System.out.println(">>> Lista de libros: <<<");
         libros.forEach(System.out::println);
       } else {
